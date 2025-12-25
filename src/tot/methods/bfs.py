@@ -2,12 +2,22 @@ import itertools
 import numpy as np
 from functools import partial
 from tot.models import gpt
+import os
 
 def get_value(task, x, y, n_evaluate_sample, cache_value=True):
     value_prompt = task.value_prompt_wrap(x, y)
     if cache_value and value_prompt in task.value_cache:
         return task.value_cache[value_prompt]
+
     value_outputs = gpt(value_prompt, n=n_evaluate_sample, stop=None)
+
+    if os.getenv("TOT_DEBUG_EVAL") == "1":
+        print("\n=== EVAL PROMPT ===\n", value_prompt)
+        print("=== EVAL OUTPUTS (raw repr) ===")
+        for i, o in enumerate(value_outputs):
+            print(i, repr(o))
+        print("=== END ===\n")
+
     value = task.value_outputs_unwrap(x, y, value_outputs)
     if cache_value:
         task.value_cache[value_prompt] = value
@@ -48,7 +58,9 @@ def get_samples(task, x, y, n_generate_sample, prompt_sample, stop):
 
 def solve(args, task, idx, to_print=True):
     global gpt
+
     gpt = partial(gpt, model=args.backend, temperature=args.temperature)
+
     print(gpt)
     x = task.get_input(idx)  # input
     ys = ['']  # current output candidates

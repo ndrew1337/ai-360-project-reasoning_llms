@@ -48,7 +48,38 @@ Answer: ((5 + 5) + 5) + 9 = 24
 Input: {input}
 '''
 
-# 1-shot
+# # 1-shot
+# propose_prompt = '''Input: 2 8 8 14
+# Possible next steps:
+# 2 + 8 = 10 (left: 8 10 14)
+# 8 / 2 = 4 (left: 4 8 14)
+# 14 + 2 = 16 (left: 8 8 16)
+# 2 * 8 = 16 (left: 8 14 16)
+# 8 - 2 = 6 (left: 6 8 14)
+# 14 - 8 = 6 (left: 2 6 8)
+# 14 / 2 = 7 (left: 7 8 8)
+# 2 / 8 = 0.25 (left: 0.25 8 14)
+# Input: {input}
+# Possible next steps:
+# '''
+
+# # 1-shot
+# propose_prompt = '''No intro text. One step per line. No empty lines.
+# Input: 2 8 8 14
+# Possible next steps:
+# 2 + 8 = 10 (left: 8 10 14)
+# 8 / 2 = 4 (left: 4 8 14)
+# 14 + 2 = 16 (left: 8 8 16)
+# 2 * 8 = 16 (left: 8 14 16)
+# 8 - 2 = 6 (left: 6 8 14)
+# 14 - 8 = 6 (left: 2 6 8)
+# 14 / 2 = 7 (left: 7 8 8)
+# 2 / 8 = 0.25 (left: 0.25 8 14)
+# Input: {input}
+# Possible next steps:
+# '''
+
+# 3-shot
 propose_prompt = '''Input: 2 8 8 14
 Possible next steps:
 2 + 8 = 10 (left: 8 10 14)
@@ -57,13 +88,33 @@ Possible next steps:
 2 * 8 = 16 (left: 8 14 16)
 8 - 2 = 6 (left: 6 8 14)
 14 - 8 = 6 (left: 2 6 8)
-14 /  2 = 7 (left: 7 8 8)
+14 / 2 = 7 (left: 7 8 8)
 14 - 2 = 12 (left: 8 8 12)
+Input: 1 3 4 6
+Possible next steps:
+6 / 3 = 2 (left: 1 2 4)
+6 - 4 = 2 (left: 1 2 3)
+6 + 1 = 7 (left: 3 4 7)
+4 - 1 = 3 (left: 3 3 6)
+4 + 3 = 7 (left: 1 6 7)
+4 * 3 = 12 (left: 1 6 12)
+6 - 1 = 5 (left: 3 4 5)
+3 / 4 = 0.75 (left: 0.75 1 6)
+Input: 3 3 8 8
+Possible next steps:
+8 / 8 = 1 (left: 1 3 3)
+8 - 3 = 5 (left: 3 5 8)
+8 + 3 = 11 (left: 3 8 11)
+3 / 8 = 0.375 (left: 0.375 3 8)
+8 * 3 = 24 (left: 3 8 24)
+3 + 3 = 6 (left: 6 8 8)
+3 * 3 = 9 (left: 8 8 9)
+8 - 8 = 0 (left: 0 3 3)
 Input: {input}
 Possible next steps:
 '''
 
-value_prompt = '''Evaluate if given numbers can reach 24 (sure/likely/impossible)
+value_prompt = '''Evaluate if given numbers can reach 24 (output only one word on the last line: sure/likely/impossible)
 10 14
 10 + 14 = 24
 sure
@@ -104,7 +155,7 @@ impossible
 {input}
 '''
 
-value_last_step_prompt = '''Use numbers and basic arithmetic operations (+ - * /) to obtain 24. Given an input and an answer, give a judgement (sure/impossible) if the answer is correct, i.e. it uses each input exactly once and no other numbers, and reach 24.
+value_last_step_prompt = '''Use numbers and basic arithmetic operations (+ - * /) to obtain 24. Given an input and an answer, give a judgement (output only one word on the last line: sure/impossible) if the answer is correct, i.e. it uses each input exactly once and no other numbers, and reach 24.
 Input: 4 4 6 8
 Answer: (4 + 8) * (6 - 4) = 24
 Judge: 
